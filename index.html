@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pradeep S – Cyber Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0f1e;
+      --panel: #0f172a;
+      --text: #e6f0ff;
+      --muted: #9fb0d3;
+      --neon: #00e5ff;
+      --neon-2: #ff00e6;
+      --accent: #00ffa3;
+      --danger: #ff3b3b;
+      --grid: rgba(0, 229, 255, 0.15);
+      --shadow-neon: 0 0 8px var(--neon), 0 0 18px var(--neon);
+      --shadow-magenta: 0 0 8px var(--neon-2), 0 0 18px var(--neon-2);
+    }
+    /* Global */
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1200px 800px at 70% -10%, rgba(255,0,230,0.15), transparent 60%),
+                  radial-gradient(1000px 600px at -10% 120%, rgba(0,229,255,0.12), transparent 60%),
+                  var(--bg);
+      color: var(--text);
+      letter-spacing: 0.1px;
+      overflow-x: hidden;
+    }
+    a { color: var(--neon); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Cyber Grid Background */
+    .grid-bg::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(to right, var(--grid) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+      background-size: 40px 40px;
+      mask-image: radial-gradient(ellipse at 50% 0%, #000 40%, transparent 70%);
+      pointer-events: none;
+      z-index: -1;
+    }
+    /* Scanlines */
+    .scanlines::after {
+      content: "";
+      position: fixed; inset: 0; pointer-events: none;
+      background: repeating-linear-gradient(
+        to bottom, rgba(255,255,255,0.03), rgba(255,255,255,0.03) 2px, transparent 2px, transparent 4px
+      );
+      mix-blend-mode: overlay; z-index: 100;
+    }
+
+    /* Header / Nav */
+    header {
+      position: sticky; top: 0; z-index: 50;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(90deg, rgba(10,15,30,0.55), rgba(10,15,30,0.2));
+      border-bottom: 1px solid rgba(0,229,255,0.25);
+    }
+    .nav {
+      max-width: 1200px; margin: 0 auto; padding: 14px 20px; display: flex; align-items: center; gap: 18px;
+    }
+    .brand { font-family: Orbitron, monospace; font-weight: 800; letter-spacing: 2px; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; }
+    .brand .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--neon); box-shadow: var(--shadow-neon); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{ transform: scale(1);} 50%{ transform: scale(1.3);} }
+    .nav-links { margin-left: auto; display: flex; gap: 16px; flex-wrap: wrap; }
+    .nav-links a { padding: 8px 12px; border: 1px solid rgba(0,229,255,0.3); border-radius: 8px; transition: 200ms; }
+    .nav-links a:hover { box-shadow: var(--shadow-neon); }
+    .theme-toggle { margin-left: 10px; padding: 8px 12px; border: 1px solid rgba(255, 0, 230, 0.35); border-radius: 8px; cursor: pointer; background: transparent; color: var(--text); box-shadow: 0 0 0 0 rgba(255,0,230,.6); transition: 200ms; }
+    .theme-toggle:hover { box-shadow: var(--shadow-magenta); }
+
+    /* Hero */
+    .hero { max-width: 1200px; margin: 40px auto; padding: 28px 20px 60px; display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 24px; align-items: center; }
+    .hero h1 { font-family: Orbitron; font-size: clamp(30px, 4vw, 56px); margin: 0 0 8px; text-shadow: 0 0 12px rgba(0,229,255,0.5); }
+    .hero p { color: var(--muted); margin: 8px 0 18px; font-size: 1.05rem; }
+    .cta { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn { position: relative; padding: 12px 16px; border-radius: 10px; border: 1px solid rgba(0,229,255,0.4); background: linear-gradient(180deg, rgba(0,229,255,0.18), rgba(255,0,230,0.08)); color: var(--text); font-weight: 600; letter-spacing: .5px; cursor: pointer; transition: 200ms; }
+    .btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-neon); }
+    .btn.alt { border-color: rgba(255,0,230,0.4); background: linear-gradient(180deg, rgba(255,0,230,0.18), rgba(0,229,255,0.08)); }
+
+    .chipbar { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+    .chip { font-family: Orbitron; font-size: 12px; padding: 6px 10px; border: 1px dashed rgba(0,229,255,0.35); border-radius: 999px; opacity: .9; }
+
+    .holo-card { position: relative; background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)); border: 1px solid rgba(0,229,255,0.28); border-radius: 16px; padding: 18px; overflow: hidden; box-shadow: inset 0 0 30px rgba(0,229,255,0.06);
+      transform-style: preserve-3d;
+    }
+    .holo-card::before { content: ""; position: absolute; inset: -1px; background:
+      radial-gradient(800px 300px at var(--mx,50%) -20%, rgba(0,229,255,0.25), transparent 50%),
+      radial-gradient(800px 300px at var(--mx,50%) 120%, rgba(255,0,230,0.18), transparent 50%);
+      pointer-events: none; mix-blend-mode: screen; }
+
+    .avatar {
+      aspect-ratio: 1/1; border-radius: 14px; border: 1px solid rgba(0,229,255,0.3); width: 100%;
+      background: conic-gradient(from 0deg, rgba(0,229,255,.18), rgba(255,0,230,.18));
+      display: grid; place-items: center; font-family: Orbitron; font-weight: 800; font-size: 64px; letter-spacing: 4px;
+      box-shadow: inset 0 0 40px rgba(0,229,255,0.09);
+      color: var(--neon);
+      text-shadow: 0 0 18px rgba(0,229,255,.6);
+    }
+
+    /* Section scaffolding */
+    section { max-width: 1200px; margin: 0 auto; padding: 32px 20px 20px; }
+    section h2 { font-family: Orbitron; letter-spacing: 1px; margin: 0 0 18px; font-weight: 800; display: inline-flex; align-items: center; gap: 10px; }
+    .title-accent { width: 8px; height: 22px; border-radius: 2px; background: linear-gradient(180deg, var(--neon), transparent); box-shadow: var(--shadow-neon); }
+
+    /* Skills */
+    .skills { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
+    .skill { grid-column: span 3; min-width: 220px; }
+    .meter { height: 10px; background: rgba(255,255,255,0.06); border-radius: 999px; overflow: hidden; border: 1px solid rgba(0,229,255,0.3); }
+    .bar { height: 100%; width: 0; background: linear-gradient(90deg, var(--neon), var(--neon-2)); box-shadow: var(--shadow-neon); transition: width 1.2s ease; }
+    .skill h4 { margin: 0 0 6px; font-weight: 600; }
+    .tags { margin-top: 8px; display: flex; gap: 8px; flex-wrap: wrap; }
+    .tag { font-size: 12px; padding: 4px 8px; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; opacity: .9; }
+
+    /* Projects */
+    .filters { display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+    .filter { padding: 8px 12px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.15); cursor: pointer; }
+    .filter.active { border-color: rgba(0,229,255,0.5); box-shadow: var(--shadow-neon); }
+    .projects { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
+    .project { grid-column: span 4; min-width: 260px; }
+    .project .thumb { height: 160px; border: 1px solid rgba(0,229,255,0.25); border-radius: 12px; background: linear-gradient(135deg, rgba(0,229,255,0.15), rgba(255,0,230,0.12)); display: grid; place-items: center; font-family: Orbitron; font-weight: 800; font-size: 28px; letter-spacing: 2px; }
+    .project h3 { margin: 10px 0 6px; }
+
+    /* Experience Timeline */
+    .timeline { position: relative; padding-left: 24px; }
+    .timeline::before { content: ""; position: absolute; left: 8px; top: 0; bottom: 0; width: 2px; background: linear-gradient(var(--neon), transparent, var(--neon-2)); }
+    .node { position: relative; margin: 0 0 20px; }
+    .node::before { content: ""; position: absolute; left: -2px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: var(--neon); box-shadow: var(--shadow-neon); }
+
+    /* Certifications carousel */
+    .certs { position: relative; overflow: hidden; border: 1px solid rgba(0,229,255,0.25); border-radius: 12px; }
+    .rail { display: flex; gap: 16px; padding: 12px; animation: scroll 30s linear infinite; }
+    @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    .cert { min-width: 320px; border: 1px dashed rgba(0,229,255,0.35); border-radius: 10px; padding: 12px; background: rgba(255,255,255,0.03); }
+
+    /* Contact */
+    form { display: grid; gap: 10px; max-width: 680px; }
+    input, textarea { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.15); color: var(--text); padding: 10px 12px; border-radius: 10px; font: inherit; }
+    textarea { resize: vertical; min-height: 120px; }
+
+    /* Footer */
+    footer { text-align: center; padding: 40px 20px 60px; color: var(--muted); opacity: .9; }
+
+    /* Layout helpers */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .hidden { display: none !important; }
+
+    /* Light mode (still cyber) */
+    .light {
+      --bg: #eef6ff;
+      --panel: #ffffff;
+      --text: #0a0f1e;
+      --muted: #334155;
+      --grid: rgba(0, 94, 255, 0.08);
+    }
+
+    /* Responsive */
+    @media (max-width: 980px) {
+      .hero { grid-template-columns: 1fr; }
+      .project { grid-column: span 6; }
+      .skill { grid-column: span 6; }
+    }
+    @media (max-width: 620px) {
+      .project { grid-column: span 12; }
+      .skill { grid-column: span 12; }
+    }
+  </style>
+</head>
+<body class="grid-bg scanlines">
+  <canvas id="particles" style="position:fixed; inset:0; z-index:-2; opacity:.7"></canvas>
+
+  <header>
+    <nav class="nav">
+      <div class="brand"><span class="dot"></span> PRADEEP // <span style="color:var(--neon)">CYBER</span>-PORT</div>
+      <div class="nav-links">
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#projects">Projects</a>
+        <a href="#experience">Experience</a>
+        <a href="#certs">Certifications</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">⚡ Theme</button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <h1>Hi, I'm <span style="color:var(--accent)">Pradeep S</span></h1>
+        <p id="typewriter">Cybersecurity undergrad crafting secure systems & resilient apps.</p>
+        <div class="cta">
+          <a class="btn" href="#projects">View Projects</a>
+          <a class="btn alt" href="#contact">Contact Me</a>
+          <a class="btn" href="https://www.linkedin.com/in/pradeep-s-01b962354" target="_blank" rel="noreferrer">LinkedIn</a>
+        </div>
+        <div class="chipbar">
+          <span class="chip">B.Tech CSE (Cyber Security) · 2022–2026</span>
+          <span class="chip">CGPA ~ 8.0</span>
+          <span class="chip">AWS Cloud Practitioner</span>
+          <span class="chip">100+ hrs Wireshark</span>
+        </div>
+      </div>
+      <div class="holo-card" id="tilt">
+        <div class="avatar">PS</div>
+        <div style="margin-top:12px; font-size:14px; color:var(--muted)">
+          <strong>Garden City University, Bangalore</strong><br/>
+          Email: <a href="mailto:pradeepgowda3766@gmail.com">pradeepgowda3766@gmail.com</a> · Phone: <a href="tel:+916360020850">+91 63600 20850</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="about">
+      <h2><span class="title-accent"></span> About</h2>
+      <div class="grid-2">
+        <div class="holo-card">
+          <p>
+            I'm a cybersecurity enthusiast with hands-on experience across network analysis, web security and cloud fundamentals. During my internship at <strong>Technook</strong>, I conducted simulated penetration tests and analyzed traffic patterns using tools like Wireshark and Burp Suite—shipping mitigation strategies that improved security posture.
+          </p>
+          <p>
+            I thrive in the sweet spot between <em>defense</em> and <em>development</em>, building apps with security-by-design and turning logs into actionable insight.
+          </p>
+        </div>
+        <div class="holo-card">
+          <ul>
+            <li>Languages: Python (Cisco certified, basics), Java (basics), SQL</li>
+            <li>Cyber Tools: Wireshark, Kali Linux, OWASP ZAP, Burp Suite</li>
+            <li>Cloud & Platforms: AWS, Cisco Packet Tracer, Ubuntu, Git</li>
+            <li>DB & Data: MySQL, MS Excel</li>
+            <li>Dev Tools: Android Studio, VS Code</li>
+            <li>Published: <em>Multi-Cloud Security Challenges and Solutions</em>, IJRP&R, Jan 2025</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="skills">
+      <h2><span class="title-accent"></span> Skills</h2>
+      <div class="skills">
+        <div class="holo-card skill">
+          <h4>Network Analysis (Wireshark)</h4>
+          <div class="meter"><div class="bar" data-pct="90"></div></div>
+          <div class="tags">
+            <span class="tag">Packets</span><span class="tag">Filters</span><span class="tag">PCAP</span>
+          </div>
+        </div>
+        <div class="holo-card skill">
+          <h4>Web Security (OWASP ZAP/Burp)</h4>
+          <div class="meter"><div class="bar" data-pct="80"></div></div>
+          <div class="tags">
+            <span class="tag">Recon</span><span class="tag">Auth</span><span class="tag">Vuln Scan</span>
+          </div>
+        </div>
+        <div class="holo-card skill">
+          <h4>Cloud (AWS)</h4>
+          <div class="meter"><div class="bar" data-pct="75"></div></div>
+          <div class="tags">
+            <span class="tag">IAM</span><span class="tag">S3</span><span class="tag">Well-Architected</span>
+          </div>
+        </div>
+        <div class="holo-card skill">
+          <h4>Programming (Python/Java/SQL)</h4>
+          <div class="meter"><div class="bar" data-pct="70"></div></div>
+          <div class="tags">
+            <span class="tag">APIs</span><span class="tag">DSA</span><span class="tag">MySQL</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects">
+      <h2><span class="title-accent"></span> Projects</h2>
+      <div class="filters">
+        <button class="filter active" data-filter="all">All</button>
+        <button class="filter" data-filter="app">Apps</button>
+        <button class="filter" data-filter="db">DBMS</button>
+        <button class="filter" data-filter="sec">Security</button>
+      </div>
+      <div class="projects">
+        <article class="holo-card project" data-tags="app sec">
+          <div class="thumb">Ekart</div>
+          <h3>Online Clothing Store</h3>
+          <p>Full-flow e-commerce prototype inspired by Ekart with cart & payments. Built using Python/Javascript modules with attention to input validation and secure sessions.</p>
+          <div class="tags"><span class="tag">Python</span><span class="tag">Javascript</span><span class="tag">Auth</span></div>
+        </article>
+        <article class="holo-card project" data-tags="db">
+          <div class="thumb">DBMS</div>
+          <h3>Online Attendance System</h3>
+          <p>Relational design to capture, manage and query student attendance. Role-based access and audit-friendly logs.</p>
+          <div class="tags"><span class="tag">SQL</span><span class="tag">MySQL</span><span class="tag">RBAC</span></div>
+        </article>
+        <article class="holo-card project" data-tags="app">
+          <div class="thumb">GPS</div>
+          <h3>Mock Location App</h3>
+          <p>Android app to simulate GPS locations for test automation and QA scenarios; guardrails to prevent misuse.</p>
+          <div class="tags"><span class="tag">Android</span><span class="tag">Kotlin/Java</span><span class="tag">QA</span></div>
+        </article>
+        <article class="holo-card project" data-tags="sec">
+          <div class="thumb">ZAP</div>
+          <h3>OWASP ZAP Playbooks</h3>
+          <p>Personal playbooks for recon → active scan → triage, mapping findings to OWASP Top 10, with reproducible steps.</p>
+          <div class="tags"><span class="tag">OWASP</span><span class="tag">Burp</span><span class="tag">Kali</span></div>
+        </article>
+        <article class="holo-card project" data-tags="sec">
+          <div class="thumb">PCAP</div>
+          <h3>Traffic Pattern Library</h3>
+          <p>Catalog of 50+ traffic patterns captured in PCAPs (DoH, TLS, brute-force, scans) for quick detection & demos.</p>
+          <div class="tags"><span class="tag">Wireshark</span><span class="tag">Packets</span><span class="tag">SIGMA</span></div>
+        </article>
+      </div>
+    </section>
+
+    <section id="experience">
+      <h2><span class="title-accent"></span> Experience</h2>
+      <div class="holo-card timeline">
+        <div class="node">
+          <h3>Cybersecurity Intern · Technook <span style="color:var(--muted); font-weight:400">(May–July 2023)</span></h3>
+          <ul>
+            <li>Executed 10+ simulated penetration tests; identified and documented vulnerabilities.</li>
+            <li>Analyzed 50+ network traffic patterns; authored mitigation strategies.</li>
+            <li>Used Wireshark, Burp Suite, OWASP ZAP within Kali/Ubuntu environments.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="certs">
+      <h2><span class="title-accent"></span> Certifications & Publications</h2>
+      <div class="certs holo-card">
+        <div class="rail" id="certRail">
+          <div class="cert"><strong>AWS DGL SS:</strong> Introduction to AWS IoT Analytics</div>
+          <div class="cert"><strong>Cisco:</strong> Python Basics</div>
+          <div class="cert"><strong>Python:</strong> Concurrent Programming – Async</div>
+          <div class="cert"><strong>Python:</strong> HTTP Requests (requests module)</div>
+          <div class="cert"><strong>Network Support & Security</strong></div>
+          <div class="cert"><strong>Publication:</strong> Multi-Cloud Security Challenges and Solutions (IJRPR, Jan 2025)</div>
+          <!-- duplicate set for seamless loop -->
+          <div class="cert"><strong>AWS DGL SS:</strong> Introduction to AWS IoT Analytics</div>
+          <div class="cert"><strong>Cisco:</strong> Python Basics</div>
+          <div class="cert"><strong>Python:</strong> Concurrent Programming – Async</div>
+          <div class="cert"><strong>Python:</strong> HTTP Requests (requests module)</div>
+          <div class="cert"><strong>Network Support & Security</strong></div>
+          <div class="cert"><strong>Publication:</strong> Multi-Cloud Security Challenges and Solutions (IJRPR, Jan 2025)</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <h2><span class="title-accent"></span> Contact</h2>
+      <div class="grid-2">
+        <div class="holo-card">
+          <form id="contactForm" onsubmit="return false;">
+            <input type="text" id="name" placeholder="Your name" required />
+            <input type="email" id="email" placeholder="Email" required />
+            <textarea id="msg" placeholder="Message" required></textarea>
+            <div style="display:flex; gap:10px; align-items:center;">
+              <button class="btn" id="sendBtn">Generate Email</button>
+              <button class="btn alt" id="copyEmail">Copy My Email</button>
+              <span id="status" style="color:var(--muted);"></span>
+            </div>
+            <p style="color:var(--muted); font-size:12px; margin:8px 0 0;">No server needed—this creates a pre-filled email to send from your client.</p>
+          </form>
+        </div>
+        <div class="holo-card">
+          <h3>Quick Links</h3>
+          <p><strong>Email:</strong> <a href="mailto:pradeepgowda3766@gmail.com">pradeepgowda3766@gmail.com</a></p>
+          <p><strong>Phone:</strong> <a href="tel:+916360020850">+91 63600 20850</a></p>
+          <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/pradeep-s-01b962354" target="_blank" rel="noreferrer">pradeep-s-01b962354</a></p>
+          <p><strong>Location:</strong> Bangalore, India</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    © <span id="year"></span> Pradeep S · Built with HTML/CSS/JS · Cyber theme
+    <div style="margin-top:10px"><button class="btn" id="printBtn">Save as PDF</button></div>
+  </footer>
+
+  <script>
+    // Particle grid / stars
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    let W, H, P=[];
+    const R=1.2, COUNT=180;
+    function resize(){ W = canvas.width = innerWidth; H = canvas.height = innerHeight; }
+    addEventListener('resize', resize); resize();
+    for(let i=0;i<COUNT;i++){ P.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3}); }
+    function tick(){
+      ctx.clearRect(0,0,W,H);
+      for(const p of P){
+        p.x+=p.vx; p.y+=p.vy; if(p.x<0||p.x>W) p.vx*=-1; if(p.y<0||p.y>H) p.vy*=-1;
+        ctx.beginPath(); ctx.arc(p.x,p.y,R,0,Math.PI*2); ctx.fillStyle='rgba(0,229,255,.7)'; ctx.fill();
+      }
+      // draw links
+      for(let i=0;i<P.length;i++) for(let j=i+1;j<P.length;j++){
+        const a=P[i], b=P[j]; const dx=a.x-b.x, dy=a.y-b.y; const d=Math.hypot(dx,dy);
+        if(d<120){ ctx.globalAlpha = (120-d)/120 * .15; ctx.strokeStyle = '#00e5ff'; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); ctx.globalAlpha=1; }
+      }
+      requestAnimationFrame(tick);
+    } tick();
+
+    // Theme toggle
+    const themeToggle = document.getElementById('themeToggle');
+    const root = document.body;
+    themeToggle.onclick = () => { root.classList.toggle('light'); localStorage.setItem('theme', root.classList.contains('light')?'light':'dark'); };
+    if(localStorage.getItem('theme')==='light') root.classList.add('light');
+
+    // Typewriter
+    const tw = document.getElementById('typewriter');
+    const lines = [
+      'Cybersecurity undergrad crafting secure systems & resilient apps.',
+      'Network analysis, web security, and AWS cloud.',
+      'Wireshark • OWASP ZAP • Kali • Python • Java • SQL'
+    ];
+    let li=0, ci=0, del=false;
+    function type(){
+      const full = lines[li];
+      tw.textContent = full.slice(0,ci) + (ci%2?'_':'');
+      if(!del && ci<full.length) ci++; else if(ci===full.length){ del=true; setTimeout(type,1500); return; } else if(del && ci>0) ci--; else { del=false; li=(li+1)%lines.length; }
+      setTimeout(type, del?18:28);
+    } setTimeout(type, 600);
+
+    // Animate skill meters when visible
+    const bars = document.querySelectorAll('.bar');
+    const io = new IntersectionObserver((ents)=>{
+      ents.forEach(e=>{ if(e.isIntersecting){ e.target.style.width = e.target.dataset.pct + '%'; io.unobserve(e.target); } });
+    }, {threshold:.6}); bars.forEach(b=>io.observe(b));
+
+    // Projects filter
+    document.querySelectorAll('.filter').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        document.querySelectorAll('.filter').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        const tag = btn.dataset.filter;
+        document.querySelectorAll('.project').forEach(card=>{
+          const show = tag==='all' || card.dataset.tags.includes(tag);
+          card.classList.toggle('hidden', !show);
+        });
+      });
+    });
+
+    // Tilt effect
+    const tilt = document.getElementById('tilt');
+    tilt.addEventListener('mousemove', (e)=>{
+      const r = tilt.getBoundingClientRect();
+      const mx = (e.clientX - r.left)/r.width*100; tilt.style.setProperty('--mx', mx+'%');
+      const rx = (e.clientY - r.top)/r.height - .5; const ry = (e.clientX - r.left)/r.width - .5;
+      tilt.style.transform = `rotateX(${(-rx*6).toFixed(2)}deg) rotateY(${(ry*6).toFixed(2)}deg)`;
+    });
+    tilt.addEventListener('mouseleave', ()=> tilt.style.transform = 'rotateX(0) rotateY(0)');
+
+    // Contact actions
+    const status = document.getElementById('status');
+    document.getElementById('sendBtn').onclick = () => {
+      const name = encodeURIComponent(document.getElementById('name').value.trim());
+      const email = encodeURIComponent(document.getElementById('email').value.trim());
+      const msg = encodeURIComponent(document.getElementById('msg').value.trim());
+      const subject = `Portfolio Contact – ${name}`;
+      const body = `From: ${name}%0D%0AEmail: ${email}%0D%0A%0D%0A${msg}`;
+      window.location.href = `mailto:pradeepgowda3766@gmail.com?subject=${subject}&body=${body}`;
+      status.textContent = 'Opening your email client…';
+    };
+    document.getElementById('copyEmail').onclick = async ()=>{
+      await navigator.clipboard.writeText('pradeepgowda3766@gmail.com');
+      status.textContent = 'Email copied to clipboard!';
+      setTimeout(()=> status.textContent='', 2000);
+    };
+
+    // Print to PDF
+    document.getElementById('printBtn').onclick = () => window.print();
+
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
